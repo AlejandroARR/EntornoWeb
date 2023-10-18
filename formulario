@@ -1,0 +1,53 @@
+<?php
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // obtenemos los archivos subidos por el usuario
+    $headFile = $_FILES["head"]["tmp_name"];
+    $bodyFile = $_FILES["body"]["tmp_name"];
+    $footerFile = $_FILES["footer"]["tmp_name"];
+
+    // lee el contenido de los archivos
+    $head = file_get_contents($headFile);
+    $body = file_get_contents($bodyFile);
+    $footer = file_get_contents($footerFile);
+
+    // unir los contenidos en un solo archivo de texto
+    $unido= $head."\n".$body."\n".$footer;
+    
+
+    $html=nl2br(htmlspecialchars($unido));
+    
+    // Mostrar el contenido en una nueva ventana
+  echo "<script>
+        var combinedTxt = " . json_encode($unido) .";
+        var combinedWindow = window.open('', '_blank');
+        combinedWindow.document.open();
+        combinedWindow.document.write('<pre>' + combinedTxt + '</pre>');
+        combinedWindow.document.close();
+    </script>";
+   
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FORMULARIO </title>
+</head>
+<body>
+    <h1>Formulario</h1>
+    <form method="post" enctype="multipart/form-data">
+        <label for="head"> Head</label><br>
+        <input type="file" name="head"><br><br>
+
+        <label for="body">Body</label><br>
+        <input type="file" name="body" ><br><br>
+
+        <label for="footer">Footer</label><br>
+        <input type="file" name="footer"><br><br>
+
+        <input type="submit" value="Mostrar">
+    </form>
+</body>
+</html>
